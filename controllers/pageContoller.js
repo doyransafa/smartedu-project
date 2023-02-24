@@ -28,6 +28,12 @@ exports.getRegisterPage = (req,res) => {
     })
 }
 
+exports.getDashboardPage = (req,res) => {
+    res.status(200).render('dashboard', {
+        page_name: 'dashboard'
+    })
+}
+
 exports.getContactPage = (req,res) => {
     res.status(200).render('contact', {
         page_name: 'contact'

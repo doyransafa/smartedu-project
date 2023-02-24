@@ -3,6 +3,7 @@ const ejs = require('ejs')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')
 
 const pageRoutes = require('./routes/pageRoutes')
 const courseRoutes = require('./routes/courseRoutes')
@@ -26,9 +27,10 @@ app.use(session({
   secret: 'my_keyboard_cat',
   resave: false,
   saveUninitialized: true,
+  store: MongoStore.create({ mongoUrl: 'mongodb://127.0.0.1:27017/smartedu-db' })
 }))
 
-app.use('*', (req, res, next) => {
+app.use('*', async (req, res, next) => {
   userIN = req.session.userID
   next()
 })
