@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const Category = require('../models/Category')
 
 exports.getIndexPage = (req,res) => {
     console.log(req.session.userID)
@@ -32,9 +33,11 @@ exports.getRegisterPage = (req,res) => {
 
 exports.getDashboardPage = async (req,res) => {
     const user = await User.findById(req.session.userID)
+    const categories = await Category.find()
     res.status(200).render('dashboard', {
         page_name: 'dashboard',
-        user
+        user,
+        categories
     })
 }
 

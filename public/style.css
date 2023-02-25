@@ -2372,9 +2372,6 @@ hr.invis1 {
 }
 
 select.bs-select-hidden,
-select.selectpicker {
-    display: none !important;
-}
 
 select.mobile-device {
     position: absolute !important;
