@@ -25,7 +25,7 @@ exports.loginUser = async (req, res) => {
                 if (result) {
                     // USER SESSION EKLENECECK
                     req.session.userID = user._id 
-                    res.status(200).redirect('/')
+                    res.status(200).redirect('/dashboard')
                 } else {
                     res.send('Login is NOT succesful')
                 }
