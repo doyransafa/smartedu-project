@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const Category = require('../models/Category')
+const Course = require('../models/Course')
 
 exports.getIndexPage = (req,res) => {
     console.log(req.session.userID)
@@ -14,11 +15,6 @@ exports.getAboutPage = (req,res) => {
     })
 }
 
-exports.getSingleCoursePage = (req,res) => {
-    res.status(200).render('course-single', {
-        page_name: 'course_single'
-    })
-}
 exports.getLoginPage = (req,res) => {
     res.status(200).render('login', {
         page_name: 'login'
@@ -32,12 +28,14 @@ exports.getRegisterPage = (req,res) => {
 }
 
 exports.getDashboardPage = async (req,res) => {
-    const user = await User.findById(req.session.userID)
+    const user = await User.findById(req.session.userID).populate('courses')
     const categories = await Category.find()
+    const courses = await Course.find({user:req.session.userID})
     res.status(200).render('dashboard', {
         page_name: 'dashboard',
         user,
-        categories
+        categories,
+        courses
     })
 }
 

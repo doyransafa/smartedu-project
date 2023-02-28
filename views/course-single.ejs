@@ -29,13 +29,29 @@
 							</div>
 							<div class="blog-desc">
 								<p><%= course.description %></p>
-							</div>							
-						</div>
+							</div>
+							<% if (userIN) {%>
+							<% if (!user.courses.includes(course._id)) { %>
+							<div class="form-group">
+								<form action="/courses/enroll" method="POST">
+									<input type="hidden" name="course_id" value="<%= course._id %>">
+									<button type="submit" class="btn btn-lg btn-success text-white"> Enroll </button>
+								</form>
+							</div>
+							<%} else {%>
+								<form action="/courses/drop" method="POST">
+									<input type="hidden" name="course_id" value="<%= course._id %>">
+									<button type="submit" class="btn btn-lg btn-danger text-white"> Drop </button>
+								</form>
+							<%}%>
+							<%}%>
+							</div>
+							
 					</div>
 					
-					<div class="blog-author">
+					<div class="blog-author pt-4">
 						<div class="author-bio">
-							<h3 class="author_name"><a href="#"><%= course.teacher.name %></a></h3>
+							<h3 class="author_name"><a href="#"><%= course.user.username %></a></h3>
 							<h5>CEO at <a href="#">SmartEDU</a></h5>
 							<p class="author_det">
 								Lorem ipsum dolor sit amet, consectetur adip, sed do eiusmod tempor incididunt  ut aut reiciendise voluptat maiores alias consequaturs aut perferendis doloribus omnis saperet docendi nec, eos ea alii molestiae aliquand.

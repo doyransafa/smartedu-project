@@ -11,6 +11,7 @@
     <div id="overviews" class="section wb">
         <div class="container">
             <div class="row"> 
+				<% if (userIN) {%>
                 <div class="col-lg-9 blog-post-single">
 				<div class="row"> 
                 <% if (courses.length > 0) { %>
@@ -30,8 +31,25 @@
 							</div>
 							<div class="course-meta-bot">
 								<ul>
-									<li><i class="fa fa-user" aria-hidden="true"></i><%= courses[i].teacher.name %></li>
+									<li><i class="fa fa-user" aria-hidden="true"></i><%= courses[i].user.username %></li>
 								</ul>
+								<% if (loggedUser.role === 'student') {%>
+								<% if (!loggedUser.courses.includes(courses[i]._id)) { %>
+								<div class="">
+									<form action="/courses/enroll" method="POST">
+										<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
+										<button type="submit" class="btn btn-lg btn-success text-white"> Enroll </button>
+									</form>
+								</div>
+								<%} else {%>
+								<div>
+									<form action="/courses/drop" method="POST">
+										<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
+										<button type="submit" class="btn btn-lg btn-danger text-white"> Drop </button>
+									</form>
+								</div>
+								<%}%>
+								<%}%>
 							</div>
 						</div>
 					</div><!-- end col -->
@@ -42,6 +60,39 @@
             </div><!-- end row -->
 					
                 </div><!-- end col -->
+				<% } else { %>
+				<div class="col-lg-9 blog-post-single">
+						<div class="row"> 
+						<% if (courses.length > 0) { %>
+							<% for (let i = 0; i < courses.length; i++) {%>
+						<div class="col-lg-6 col-md-6 col-12">
+								<div class="course-item mb-5">
+									<div class="image-blog">
+										<img src="images/blog_1.jpg" alt="" class="img-fluid">
+									</div>
+									<div class="course-br">
+										<div class="course-title">
+											<h2><a href="courses/<%= courses[i].slug %>" title=""><%= courses[i].name %></a></h2>
+										</div>
+										<div class="course-desc">
+											<p> <%= courses[i].description %> </p>
+										</div>
+									</div>
+									<div class="course-meta-bot">
+										<ul>
+											<li><i class="fa fa-user" aria-hidden="true"></i><%= courses[i].user.username %></li>
+										</ul>
+									</div>
+								</div>
+							</div><!-- end col -->
+							<% }%>
+							<% } else { %>
+								<h1>No courses found on <u><%= selectedCategory.name %></u> category </h1>
+							<% } %>
+					</div><!-- end row -->
+							
+				</div><!-- end col -->
+				<%}%>
 				<div class="col-lg-3 col-12 right-single">
 					<div class="widget-search">
 						<div class="site-search-area">
