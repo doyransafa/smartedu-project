@@ -205,4 +205,112 @@
         </div><!-- end container -->
     </div><!-- end section -->
 
+			<% if (user.role === 'admin' && (users != null || categories != null)) { %>
+			<div class="offset-2 col-8 mb-5">
+				<% if (flashMessages.userDeleted) {%>
+					<div class="alert alert-warning alert-dismissible fade show col-lg-12" role="alert">
+						<strong>Congrats!</strong> <%= flashMessages.userDeleted %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				<%}%>
+				<h1>Users</h1>
+				<table class="table">
+					<thead class="thead-light">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Email</th>
+						<th scope="col">Role</th>
+						<th scope="col">Action</th>
+					</tr>
+					</thead>
+					<tbody>
+					<% for (let i = 0; i < users.length; i++) {%>
+					<tr>
+						<th scope="row"><%= i + 1 %></th>
+						<td><%= users[i].username %></td>
+						<td><%= users[i].role %></td>
+						<td>
+							<form action="/users/delete/<%= users[i].id %>?_method=DELETE" method="POST" onclick="return confirm('ARE YOU SURE?')">
+								<button type="submit" class="btn btn-sm btn-danger text-white"> Delete </button>
+							</form>
+						</td>
+					</tr>
+					<% } %>
+					</tbody>
+				</table>
+				<% if (flashMessages.categoryAdded) {%>
+					<div class="alert alert-success alert-dismissible fade show col-lg-12" role="alert">
+						<strong>Congrats!</strong> <%= flashMessages.categoryAdded %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				<%}%>
+				<% if (flashMessages.categoryDeleted) {%>
+					<div class="alert alert-primary alert-dismissible fade show col-lg-12" role="alert">
+						<strong>Congrats!</strong> <%= flashMessages.categoryDeleted %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				<%}%>
+				<h1>Categories</h1>
+				<table class="table">
+					<thead class="thead-light">
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Categoy</th>
+						<th scope="col">Action</th>
+					</tr>
+					</thead>
+					<tbody>
+					<% for (let i = 0; i < categories.length; i++) {%>
+					<tr>
+						<th scope="row"><%= i + 1 %></th>
+						<td><%= categories[i].name %></td>
+						<td>
+							<form action="/categories/delete/<%= categories[i].id %>?_method=DELETE" method="POST" onclick="return confirm('ARE YOU SURE?')">
+								<button type="submit" class="btn btn-sm btn-danger text-white"> Delete </button>
+							</form>
+						</td>
+					</tr>
+					<% } %>
+					<tr>
+						<th colspan="3">
+							<button type="button" class="btn btn-sm btn-success text-white" data-toggle="modal" data-target="#addCourse"> Add New Category </button>
+						</th>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<!-- MODAL -->
+			<div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="addCourseModalLabel">Update Course</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+					<form action="/categories" method="POST">
+						<div class="form-group">
+							<label class="col-form-label">Category Name:</label>
+							<input type="text" class="form-control" name="name">
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-success">Add</button>
+					</div>
+					</form>
+					</div>
+				</div>
+				</div>
+
+			<% } %>
+
 	<%- include('partials/_footer.ejs') %>

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
+const Course = require("../models/Course");
 
 exports.createUser = async (req, res) => {
 
@@ -56,4 +57,19 @@ exports.logoutUser = async (req, res) => {
         res.redirect('/')
     })
 
+};
+
+exports.deleteUser = async (req, res) => {
+
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+        const courses = await Course.deleteMany({user:req.params.id})
+        req.flash('userDeleted', `User ${user.username} deleted!`)
+        res.status(201).redirect('/dashboard');
+    } catch (error) {
+        res.status(400).json({
+            status: "bad request",
+            error
+        });
+    }
 };
