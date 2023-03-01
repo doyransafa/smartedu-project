@@ -48,7 +48,7 @@ app.use('/courses', courseRoutes)
 app.use('/categories', categoryRoutes)
 app.use('/users', userRoutes)
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
     console.log(`${PORT} uzerinden sunucuya baglanildi`)
 })
