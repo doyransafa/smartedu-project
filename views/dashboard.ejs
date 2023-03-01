@@ -18,6 +18,20 @@
 						<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
+				<%} else if (flashMessages.deleted) {%>
+					<div class="alert alert-primary alert-dismissible fade show col-lg-12" role="alert">
+						<strong>Congrats!</strong> <%= flashMessages.deleted %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				<% } else if (flashMessages.updated) {%>
+					<div class="alert alert-success alert-dismissible fade show col-lg-12" role="alert">
+						<strong>Congrats!</strong> <%= flashMessages.updated %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
 				<%}%>
                 <div class="col-lg-12 blog-post-single">					
 					<div class="blog-author">
@@ -38,13 +52,13 @@
 			<% if (user.role === 'teacher' ) { %>
 			<!-- modal start -->
 			<div class="row">
-			<button type="button" class="btn btn-success col-lg-3 mt-3 mx-auto" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Create New Course</button>
+			<button type="button" class="btn btn-success col-lg-3 mt-3 mx-auto" data-toggle="modal" data-target="#createCourseModal" data-whatever="@mdo">Create New Course</button>
 			</div>
-			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="createCourseModal" tabindex="-1" role="dialog" aria-labelledby="createCourseModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Create New Course</h5>
+					<h5 class="modal-title" id="createCourseModalLabel">Create New Course</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 					</button>
@@ -77,9 +91,10 @@
 			</div>
 			</div>
 			<!-- modal end -->
+			<div class="blog-author py-3 ">
+			
+				<h1 class="text-center">Courses by Teacher <%= user.username %></h1>	
 
-			<div class="row mt-5"> 
-				<h1>Courses by Teacher <%= user.username %></h1>	
 			</div>
 
 			<div class="row mt-5"> 
@@ -96,24 +111,71 @@
 							<div class="course-desc">
 								<p><%= courses[i].description %></p>
 							</div>
-							<!-- Might Change It To Delete Later -->
-							<!-- <div>
-								<form action="/courses/drop" method="POST">
-									<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
-									<button type="submit" class="btn btn-lg btn-danger text-white"> Drop </button>
-								</form>
-							</div> -->
+							
+							<!-- modal start -->
+				<!-- modal end -->
+
+							<div class="container">
+								<div class="row justify-content-around">
+									<form class="col-2 m-0 p-0">
+										<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
+										<button type="button" class="btn btn-lg btn-secondary text-white" data-toggle="modal" data-target="#updateCourse<%= courses[i]._id %>" > Update </button>
+									</form>
+									<form class="col-2 m-0 p-0" action="/courses/<%= courses[i]._id %>/delete?_method=DELETE" method="POST" onclick="return confirm('ARE YOU SURE?')">
+										<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
+										<button type="submit" class="btn btn-lg btn-danger text-white"> Delete </button>
+									</form>
+								</div>
+							</div>
 						</div>
 					</div>
                 </div><!-- end col -->
+				<!-- <div class="row">
+				<button type="button" class="btn btn-success col-lg-3 mt-3 mx-auto" data-toggle="modal" data-target="#createCourseModal" data-whatever="@mdo">Create New Course</button>
+				</div> -->
+				<div class="modal fade" id="updateCourse<%= courses[i]._id %>" tabindex="-1" role="dialog" aria-labelledby="updateCourseModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="updateCourseModalLabel">Update Course</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form action="/courses/update/<%= courses[i]._id %>?_method=PUT" method="POST">
+							<div class="form-group">
+								<label class="col-form-label">Course Name:</label>
+								<input type="text" class="form-control" name="name" value="<%= courses[i].name %>">
+							</div>
+							<div class="form-group">
+								<label for="message-text" class="col-form-label">Description:</label>
+								<textarea class="form-control" name="description"> <%= courses[i].description %> </textarea>
+							</div>
+							<select class="form-control" id="exampleFormControlSelect1" name="category">
+								<% for (let i=0; i< categories.length; i++ ) { %>
+								<option value="<%= categories[i]._id %>"><%= categories[i].name %></option>
+								<%}%>
+							</select>
+							<div class="form-group">
+								<input type="hidden" name="role" value="<%= user.role %>"> 
+							</div>		
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-success">Update</button>
+						</div>
+					</form>
+						</div>
+					</div>
+					</div>
 				<% } %>
             </div><!-- end row -->
 
 			<%} if (user.role === 'student' || user.role === 'teacher') {%>
-			<div class="row mt-5"> 
-			<h1>Enrolled Courses by <%= user.username %></h1>	
+			<div class="blog-author py-3 ">
+				<h1 class="text-center">Enrolled Courses by <%= user.username %></h1>	
 			</div>
-
 			<div class="row mt-5"> 
 				<% for (let i = 0; i < user.courses.length; i++) { %>
 				<div class="col-lg-6 col-md-6 col-12">
@@ -131,7 +193,7 @@
 							<div>
 								<form action="/courses/drop" method="POST">
 									<input type="hidden" name="course_id" value="<%= user.courses[i]._id %>">
-									<button type="submit" class="btn btn-lg btn-danger text-white"> Drop </button>
+									<button type="submit" class="btn btn-lg btn-warning text-white"> Drop </button>
 								</form>
 							</div>
 						</div>

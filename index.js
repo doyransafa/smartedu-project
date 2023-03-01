@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const flash = require('connect-flash');
+const methodOverride = require('method-override')
 
 const pageRoutes = require('./routes/pageRoutes')
 const courseRoutes = require('./routes/courseRoutes')
@@ -24,6 +25,7 @@ global.userIN = null
 app.use(express.static('public'))
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(methodOverride('_method', {methods: ['POST', 'GET']}));
 app.use(session({
   secret: 'my_keyboard_cat',
   resave: false,

@@ -32,7 +32,7 @@ exports.getAllCourses = async (req, res) => {
         const selectedCategory = await Category.findOne({ slug: categorySlug });
         const loggedUser = await User.findById(req.session.userID);
         let filter = {};
-          
+
         if (categorySlug) {
             filter = { category: selectedCategory._id };
         }
@@ -51,8 +51,6 @@ exports.getAllCourses = async (req, res) => {
         }).sort({ createdAt: -1 }).populate('user');
         const categories = await Category.find().sort({ name: 1 });
         
-        
-
         res.status(200).render("courses", {
             page_name: "courses",
             courses,
@@ -109,6 +107,38 @@ exports.dropCourse = async (req, res) => {
         await user.courses.pull({ _id: req.body.course_id });
         await user.save();
 
+        res.status(200).redirect("/dashboard");
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
+    }
+};
+
+exports.deleteCourse = async (req, res) => {
+    try {
+        const course = await Course.findByIdAndRemove(req.params.id);
+        // Couldn't emplement removing deleted courses from users
+        // const enrolledUsers = await User.find()
+        // await enrolledUsers.updateMany(
+        //     {},
+        //     {$pull: { "courses": ObjectID(req.params.id) }}
+        //     )
+        req.flash('deleted', `Course deleted succesfully`)
+        res.status(200).redirect("/dashboard");
+    } catch (error) {
+        res.status(400).json({
+            status: "fail",
+            error,
+        });
+    }
+};
+
+exports.updateCourse = async (req, res) => {
+    try {
+        const course = await Course.findByIdAndUpdate(req.params.id, req.body);
+        req.flash('updated', `${course.name} updated succesfully`)
         res.status(200).redirect("/dashboard");
     } catch (error) {
         res.status(400).json({

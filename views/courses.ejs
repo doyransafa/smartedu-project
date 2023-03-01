@@ -45,7 +45,7 @@
 								<div>
 									<form action="/courses/drop" method="POST">
 										<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
-										<button type="submit" class="btn btn-lg btn-danger text-white"> Drop </button>
+										<button type="submit" class="btn btn-lg btn-warning text-white"> Drop </button>
 									</form>
 								</div>
 								<%}%>
@@ -55,7 +55,9 @@
 					</div><!-- end col -->
 					<% }%>
 					<% } else { %>
+						<% if (courses.length > 0) {%>
 						<h1>No courses found on <u><%= selectedCategory.name %></u> category </h1>
+						<% } %>
 					<% } %>
             </div><!-- end row -->
 					
