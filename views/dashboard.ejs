@@ -11,6 +11,14 @@
     <div id="overviews" class="section wb">
         <div class="container">
             <div class="row"> 
+				<% if (flashMessages.info) {%>
+					<div class="alert alert-primary alert-dismissible fade show col-lg-12" role="alert">
+						<strong>Congrats!</strong> <%= flashMessages.info %>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				<%}%>
                 <div class="col-lg-12 blog-post-single">					
 					<div class="blog-author">
 						<div class="author-bio">
@@ -30,7 +38,7 @@
 			<% if (user.role === 'teacher' ) { %>
 			<!-- modal start -->
 			<div class="row">
-			<button type="button" class="btn btn-warning col-lg-3 mt-3 mx-auto" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Create New Category</button>
+			<button type="button" class="btn btn-success col-lg-3 mt-3 mx-auto" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Create New Course</button>
 			</div>
 			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
@@ -69,7 +77,43 @@
 			</div>
 			</div>
 			<!-- modal end -->
-			<%}%>
+
+			<div class="row mt-5"> 
+				<h1>Courses by Teacher <%= user.username %></h1>	
+			</div>
+
+			<div class="row mt-5"> 
+				<% for (let i = 0; i < courses.length; i++) { %>
+				<div class="col-lg-6 col-md-6 col-12">
+                    <div class="course-item mb-5">
+						<div class="image-blog">
+							<img src="images/blog_1.jpg" alt="" class="img-fluid">
+						</div>
+						<div class="course-br">
+							<div class="course-title">
+								<h2><a href="courses/<%= courses[i].slug %>" title=""><%= courses[i].name %> </a></h2>
+							</div>
+							<div class="course-desc">
+								<p><%= courses[i].description %></p>
+							</div>
+							<!-- Might Change It To Delete Later -->
+							<!-- <div>
+								<form action="/courses/drop" method="POST">
+									<input type="hidden" name="course_id" value="<%= courses[i]._id %>">
+									<button type="submit" class="btn btn-lg btn-danger text-white"> Drop </button>
+								</form>
+							</div> -->
+						</div>
+					</div>
+                </div><!-- end col -->
+				<% } %>
+            </div><!-- end row -->
+
+			<%} if (user.role === 'student' || user.role === 'teacher') {%>
+			<div class="row mt-5"> 
+			<h1>Enrolled Courses by <%= user.username %></h1>	
+			</div>
+
 			<div class="row mt-5"> 
 				<% for (let i = 0; i < user.courses.length; i++) { %>
 				<div class="col-lg-6 col-md-6 col-12">
@@ -93,6 +137,7 @@
 						</div>
 					</div>
                 </div><!-- end col -->
+				<% } %>
 				<% } %>
             </div><!-- end row -->
         </div><!-- end container -->

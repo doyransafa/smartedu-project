@@ -75,7 +75,7 @@
 											<h2><a href="courses/<%= courses[i].slug %>" title=""><%= courses[i].name %></a></h2>
 										</div>
 										<div class="course-desc">
-											<p> <%= courses[i].description %> </p>
+											<p> <%= courses[i].description.substring(0,100) + '...' %> </p>
 										</div>
 									</div>
 									<div class="course-meta-bot">
@@ -86,8 +86,6 @@
 								</div>
 							</div><!-- end col -->
 							<% }%>
-							<% } else { %>
-								<h1>No courses found on <u><%= selectedCategory.name %></u> category </h1>
 							<% } %>
 					</div><!-- end row -->
 							
@@ -96,10 +94,10 @@
 				<div class="col-lg-3 col-12 right-single">
 					<div class="widget-search">
 						<div class="site-search-area">
-							<form method="get" id="site-searchform" action="#">
+							<form method="GET" id="site-searchform" action="/courses">
 								<div>
-									<input class="input-text form-control" name="search-k" id="search-k" placeholder="Search keywords..." type="text">
-									<input id="searchsubmit" value="Search" type="submit">
+									<input class="input-text form-control" name="search" id="search-k" placeholder="Search" type="text">
+									<button id="searchsubmit" value="Search"></button>
 								</div>
 							</form>
 						</div>

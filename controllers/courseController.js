@@ -11,6 +11,10 @@ exports.createCourse = async (req, res) => {
             category: req.body.category,
             user: req.session.userID,
         });
+        const user = await User.findById(req.session.userID);
+        await user.courses.addToSet({ _id: course._id });
+        await user.save();
+        req.flash('success', `Course ${req.body.name} created succesfully`)
         res.status(201).redirect(`/courses/${course.slug}`);
     } catch (error) {
         res.status(400).json({
@@ -23,20 +27,39 @@ exports.createCourse = async (req, res) => {
 exports.getAllCourses = async (req, res) => {
     try {
         const categorySlug = req.query.category;
+        const query = req.query.search
+
         const selectedCategory = await Category.findOne({ slug: categorySlug });
         const loggedUser = await User.findById(req.session.userID);
         let filter = {};
+          
         if (categorySlug) {
             filter = { category: selectedCategory._id };
         }
-        const courses = await Course.find(filter).sort({ createdAt: -1 }).populate('user');
+        if (query) {
+            filter = {name: query}
+        }
+        if (!query && !categorySlug) {
+            filter.name = ''
+            filter.category = null
+        }
+        const courses = await Course.find({
+            $or: [
+                {name:{$regex: '.*' + filter.name + '.*', $options: 'i'}},
+                {category: filter.category}
+            ]
+        }).sort({ createdAt: -1 }).populate('user');
         const categories = await Category.find().sort({ name: 1 });
+        
+        
+
         res.status(200).render("courses", {
             page_name: "courses",
             courses,
             categories,
             selectedCategory,
-            loggedUser
+            loggedUser,
+            query
         });
     } catch (error) {
         res.status(400).json({
@@ -70,7 +93,7 @@ exports.enrollCourse = async (req, res) => {
         const user = await User.findById(req.session.userID);
         await user.courses.addToSet({ _id: req.body.course_id });
         await user.save();
-
+        req.flash('info', `Enrolled to course succesfully`)
         res.status(200).redirect("/dashboard");
     } catch (error) {
         res.status(400).json({
